@@ -1,18 +1,27 @@
-name: Docker Image CI
+name: WormGPT Kaggle Miner
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  workflow_dispatch: # Cho phép bấm nút chạy tay
+  schedule:
+    - cron: '0 */6 * * *' # Tự động chạy lại sau mỗi 6 tiếng (để bào liên tục)
 
 jobs:
-
-  build:
-
+  mining:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Cài đặt Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Cài đặt thư viện cần thiết
+      run: |
+        pip install playwright nest_asyncio
+        playwright install chromium
+
+    - name: Chạy Bot Kaggle
+      run: python main.py
