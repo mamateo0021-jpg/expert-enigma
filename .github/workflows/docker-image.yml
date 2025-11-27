@@ -24,4 +24,4 @@ jobs:
         playwright install chromium
 
     - name: Chạy Bot Kaggle
-      run: python main.py
+      run: python 1.py
